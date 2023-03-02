@@ -43,8 +43,9 @@ export class HttpRouter {
         if(schema.input) {
           const validator = TypeCompiler.Compile(schema.input);
           const validatorOutput = validator.Check(rawParams);
-          if(validatorOutput) {
-            console.log(validatorOutput);
+          if(!validatorOutput) {
+            const errors = [...validator.Errors(rawParams)];
+            console.error('Validation Errors', errors);
             throw new InvalidUserInputError('Invalid user input');
           }
         }
