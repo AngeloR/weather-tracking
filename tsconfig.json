@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "target": "es6",
+        "moduleResolution": "node",
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "baseUrl": "src",
+        "paths": {},
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "resolveJsonModule": true,
+        "paths": {
+          "@lib/*": ["lib/*"],
+          "@routes/*": ["routes/*"]
+        }
+    },
+    "ts-node": {
+      "require": ["tsconfig-paths/register"]
+    }
+}
