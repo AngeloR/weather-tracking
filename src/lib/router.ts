@@ -84,4 +84,9 @@ export class HttpRouter {
 		console.debug(`Mapped POST ${this.prefix+endpoint}`);
 		this.router.post(endpoint, this.wrap<I, O>(schema, handler));
 	}
+
+	delete<I, O>(schema: Schema, endpoint: string, handler: HttpHandler<I, O>): void {
+		console.debug(`Mapped DELETE ${this.prefix+endpoint}`);
+		this.router.post(endpoint, this.wrap<I, O>(schema, handler));
+	}
 }
