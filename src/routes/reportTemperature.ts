@@ -1,11 +1,13 @@
 import { Type, Static } from '@sinclair/typebox';
 import { HttpRouter } from '@lib/router';;
+import { db } from '@lib/db';
+import type { Station } from '@prisma/client';
 
 export const router = new HttpRouter('');
 
 const inputSchema = Type.Object({
   params: Type.Object({
-    userId: Type.String()
+    stationId: Type.String()
   }),
   body: Type.Object({
     temperature: Type.Number(),
@@ -14,22 +16,36 @@ const inputSchema = Type.Object({
 
 export type InputType = Static<typeof inputSchema>;
 
-export type OutputType = {
-  temperature: number,
-  userId: string
-};
+export async function acceptUserTemperature(data: InputType): Promise<void> {
 
-export async function acceptUserTemperature(data: InputType): Promise<OutputType> {
-  console.log(data.body.temperature, typeof data.body.temperature);
-  return {
-    temperature: data.body.temperature,
-    userId: data.params.userId
+  let station: Station;
+
+  try {
+    station = await db.station.findUniqueOrThrow({
+      where: {
+        id: data.params.stationId
+      }
+    });
   }
+  catch(e) {
+    station = await db.station.create({
+      data: {
+        id: data.params.stationId
+      }
+    });
+  }
+
+  await db.temperature.create({
+    data: {
+      stationId: station.id,
+      value: data.body.temperature,
+    }
+  });
 }
 
 
-router.post<InputType, OutputType>(
+router.post<InputType, void>(
   { input: inputSchema },
-  '/user/:userId/temperature',
+  '/station/:stationId/temperature',
   acceptUserTemperature
 );
