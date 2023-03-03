@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Station {
+  id String @id
+  userType Role @default(USER)
+  createdDate DateTime @default(now())
+  temperatures Temperature[]
+}
+
+model Temperature {
+  id String @default(uuid())
+  station Station @relation(fields: [stationId], references: [id])
+  stationId String
+  value Decimal
+  takenDate DateTime @default(now())
+  @@id([id, stationId])
+}
+

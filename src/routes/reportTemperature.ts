@@ -1,12 +1,14 @@
 import { Type, Static } from '@sinclair/typebox';
 import { HttpRouter } from '@lib/router';;
 
-export const router = new HttpRouter('/temperature');
+export const router = new HttpRouter('');
 
 const inputSchema = Type.Object({
+  params: Type.Object({
+    userId: Type.String()
+  }),
   body: Type.Object({
     temperature: Type.Number(),
-    userId: Type.String()
   })
 });
 
@@ -18,15 +20,16 @@ export type OutputType = {
 };
 
 export async function acceptUserTemperature(data: InputType): Promise<OutputType> {
+  console.log(data.body.temperature, typeof data.body.temperature);
   return {
     temperature: data.body.temperature,
-    userId: data.body.userId
+    userId: data.params.userId
   }
 }
 
 
 router.post<InputType, OutputType>(
   { input: inputSchema },
-  '/',
+  '/user/:userId/temperature',
   acceptUserTemperature
 );
