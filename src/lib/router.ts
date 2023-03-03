@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { TObject } from '@sinclair/typebox';
 import { TypeCompiler } from '@sinclair/typebox/compiler';
-import { isString } from 'lodash';
 import type { Request, Response } from 'express';
 
 type Schema = {
@@ -56,7 +55,7 @@ export class HttpRouter {
 				if(output === undefined) {
 					res.statusCode = 204;
 				}
-				else if(isString(output)) {
+				else if(typeof output === 'string') {
 					res.send(output);
 				}
 				else {

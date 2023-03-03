@@ -1,17 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import http from 'http';
 import { HttpRouter } from './router';
 
 export class HttpServer {
 	server: express.Application;
-  http: http.Server;
 	port: number;
 	constructor(port: string | number = '9090') {
 		this.port = parseInt(port.toString(), 10);
     this.server = express();
 		this.configureMiddleWare();
-    this.http = http.createServer(this.server);
 	}
 
 	configureMiddleWare() {
@@ -26,7 +23,7 @@ export class HttpServer {
 
 	start(fn?: any): void {
 		console.info(`Listening on port ${this.port}`);
-		this.http.listen(this.port, fn?.bind(this));
+		this.server.listen(this.port, fn?.bind(this));
 	}
 }
 
